@@ -1,0 +1,135 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Product+Sans:wght@400;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: 'Inter', sans-serif;
+}
+
+@layer base {
+  :root {
+    --background: 210 40% 98%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    /* Google blue */
+    --primary: 217 89% 61%;
+    --primary-foreground: 210 40% 98%;
+
+    /* Google light blue */
+    --secondary: 199 89% 48%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    --muted: 210 40% 96.1%;
+    /* Updated for better light mode visibility */
+    --muted-foreground: 220 13% 42%; /* Previously 215.4 16.3% 46.9% (Slate 500), now Slate 600 equivalent */
+
+    /* Google yellow */
+    --accent: 45 93% 47%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+
+    /* Google red */
+    --destructive: 3 90% 58%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 217 89% 61%;
+    --radius: 0.75rem;
+
+    /* Google color palette for charts/graphics */
+    --chart-1: 217 89% 61%; /* blue */
+    --chart-2: 199 89% 48%; /* light blue */
+    --chart-3: 3 90% 58%;   /* red */
+    --chart-4: 45 93% 47%;  /* yellow */
+    --chart-5: 123 46% 48%; /* green */
+
+    /* Additional Google colors */
+    --google-green: 123 46% 48%;
+    --google-yellow: 45 93% 47%;
+    --google-red: 3 90% 58%;
+    --google-blue: 217 89% 61%;
+    --google-light-blue: 199 89% 48%;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    /* Google blue - darker */
+    --primary: 217 89% 55%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    /* Google blue - darker */
+    --secondary: 199 89% 43%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    /* Google yellow - darker */
+    --accent: 45 93% 42%;
+    --accent-foreground: 210 40% 98%;
+
+    /* Google red - darker */
+    --destructive: 3 90% 50%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 224.3 76.3% 48%;
+
+    /* Google color palette for charts/graphics - dark mode */
+    --chart-1: 217 89% 55%; /* blue */
+    --chart-2: 199 89% 43%; /* light blue */
+    --chart-3: 3 90% 50%;   /* red */
+    --chart-4: 45 93% 42%;  /* yellow */
+    --chart-5: 123 46% 43%; /* green */
+
+    /* Additional Google colors - dark mode */
+    --google-green: 123 46% 43%;
+    --google-yellow: 45 93% 42%;
+    --google-red: 3 90% 50%;
+    --google-blue: 217 89% 55%;
+    --google-light-blue: 199 89% 43%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Custom classes for Google-inspired 3D effects */
+@layer components {
+  .google-card {
+    @apply rounded-xl bg-white shadow-lg transition-all duration-300
+           hover:shadow-xl hover:-translate-y-1;
+  }
+
+  .google-button {
+    @apply rounded-full shadow-md transition-all duration-300
+           hover:shadow-lg hover:-translate-y-0.5;
+  }
+
+  .google-gradient {
+    @apply bg-gradient-to-r from-[hsl(217,89%,61%)] via-[hsl(199,89%,48%)] to-[hsl(3,90%,58%)];
+  }
+
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-[hsl(217,89%,61%)] to-[hsl(199,89%,48%)];
+  }
+}
