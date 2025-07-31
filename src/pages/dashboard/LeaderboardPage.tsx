@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { IconSearch, IconTrophy, IconFilter, IconUsers, IconUserCircle, IconStar } from '@tabler/icons-react';
+import { useCalculation } from '@/lib/calculation-context';
 
 // Animation variants
 const itemVariants = {
@@ -137,6 +138,7 @@ const leaderboardData = [
 ];
 
 export function LeaderboardPage() {
+  const { calculationResult } = useCalculation();
   const [activeFilter, setActiveFilter] = useState('global');
   const { ref, inView } = useInView({
     threshold: 0.1,
@@ -229,15 +231,15 @@ export function LeaderboardPage() {
               <div className="flex gap-6 md:gap-12">
                 <div className="flex flex-col items-center">
                   <span className="text-muted-foreground text-sm">Points</span>
-                  <span className="text-2xl font-bold text-primary">756</span>
+                    <span className="text-2xl font-bold text-primary">{calculationResult?.user.points || 0}</span>
                 </div>
                 <div className="flex flex-col items-center">
                   <span className="text-muted-foreground text-sm">Badges</span>
-                  <span className="text-2xl font-bold text-google-blue">19</span>
+                    <span className="text-2xl font-bold text-google-blue">{calculationResult?.user.badges.length || 0}</span>
                 </div>
                 <div className="flex flex-col items-center">
                   <span className="text-muted-foreground text-sm">Rank</span>
-                  <span className="text-2xl font-bold">#6</span>
+                    <span className="text-2xl font-bold">{calculationResult ? '#Calculated' : '#Not Calculated'}</span>
                 </div>
               </div>
             </div>

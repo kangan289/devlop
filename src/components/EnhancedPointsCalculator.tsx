@@ -5,11 +5,12 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { api } from '@/services/api';
+import { useCalculation } from '@/lib/calculation-context';
 import { Trophy, Award, Star, Calendar } from 'lucide-react';
 
 interface BadgeData {
   name: string;
-  type: 'skill' | 'level' | 'trivia' | 'completion';
+  type: string;
   points: number;
   category: string;
   completed: boolean;
@@ -44,6 +45,7 @@ interface EnhancedPointsCalculatorProps {
 }
 
 export function EnhancedPointsCalculator({ onProfileScanned }: EnhancedPointsCalculatorProps) {
+  const { setCalculationResult, setProfileUrl: setGlobalProfileUrl, setIsCalculating } = useCalculation();
   const [profileUrl, setProfileUrl] = useState('');
   const [result, setResult] = useState<CalculationResult | null>(null);
   const [calculatingPoints, setCalculatingPoints] = useState(false);
@@ -57,26 +59,22 @@ export function EnhancedPointsCalculator({ onProfileScanned }: EnhancedPointsCal
     setResult(null);
 
     try {
-      // Call the enhanced API endpoint
-      const response = await fetch('/api/calculate-points-enhanced', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ profileUrl }),
-      });
-
-      const data = await response.json();
+      setIsCalculating(true);
+      setGlobalProfileUrl(profileUrl);
+      
+      // Use the demo API instead of fetch
+      const data = await api.calculatePointsEnhanced(profileUrl);
 
       if (data.success) {
         setResult(data);
+        setCalculationResult(data);
         onProfileScanned();
       } else {
         setError(data.message || 'Failed to calculate points. Please check your profile URL.');
       }
     } catch (err) {
       console.error('Error calculating points:', err);
-      setError('Failed to connect to the server. Please try again later.');
+      setError('Failed to calculate points. Please try again later.');
     }
 
     setCalculatingPoints(false);

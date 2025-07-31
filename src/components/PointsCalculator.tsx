@@ -5,12 +5,14 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { api } from '@/services/api';
+import { useCalculation } from '@/lib/calculation-context';
 
 interface PointsCalculatorProps {
   onProfileScanned: () => void;
 }
 
 export function PointsCalculator({ onProfileScanned }: PointsCalculatorProps) {
+  const { setCalculationResult, setProfileUrl: setGlobalProfileUrl, setIsCalculating } = useCalculation();
   const [profileUrl, setProfileUrl] = useState('');
   const [points, setPoints] = useState<number | null>(null);
   const [calculatingPoints, setCalculatingPoints] = useState(false);
@@ -24,11 +26,15 @@ export function PointsCalculator({ onProfileScanned }: PointsCalculatorProps) {
     setError(null);
 
     try {
+      setIsCalculating(true);
+      setGlobalProfileUrl(profileUrl);
+      
       // Call the real API
       const response: any = await api.calculatePoints(profileUrl);
 
       if (response.success) {
         setPoints(response.user.points);
+        setCalculationResult(response);
 
         // Save profile if not already saved
         if (!savedProfiles.includes(profileUrl)) {
@@ -38,25 +44,27 @@ export function PointsCalculator({ onProfileScanned }: PointsCalculatorProps) {
         onProfileScanned();
       } else {
         setError('Failed to calculate points. Please check your profile URL.');
-      }
+      } 
     } catch (err) {
       console.error('Error calculating points:', err);
-      setError('Failed to connect to the server. Please try again later.');
+      setError('Failed to calculate points. Please try again later.');
     }
 
     setCalculatingPoints(false);
   };
-
+ 
   const loadSavedProfile = async (profile: string) => {
     setProfileUrl(profile);
     setCalculatingPoints(true);
     setError(null);
 
     try {
+      // Call the real API
       const response: any = await api.calculatePoints(profile);
 
       if (response.success) {
         setPoints(response.user.points);
+        setCalculationResult(response); 
       } else {
         setError('Failed to load saved profile.');
       }

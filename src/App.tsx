@@ -1,11 +1,11 @@
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Toaster } from '@/components/ui/toaster';
-import { AuthProvider } from '@/lib/auth-context';
+import { RootLayout } from '@/components/layout/RootLayout';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
+import { DashboardProvider } from '@/lib/dashboard-context';
 import { HomePage } from '@/pages/HomePage';
-import { DashboardOverview } from '@/pages/dashboard/DashboardOverview';
+import DashboardOverview from '@/pages/dashboard/DashboardOverview';
 import { LeaderboardPage } from '@/pages/dashboard/LeaderboardPage';
 import { BadgesPage } from '@/pages/dashboard/BadgesPage';
 import { ResourcesPage } from '@/pages/dashboard/ResourcesPage';
@@ -44,7 +44,7 @@ function AnimatedRoutes() {
         <Route
           path="/"
           element={
-            <MainLayout>
+            <MainLayout title="ArcadeCalc - Home" description="Calculate your Google Cloud Skills Boost Arcade points">
               <motion.div
                 initial="initial"
                 animate="in"
@@ -62,6 +62,7 @@ function AnimatedRoutes() {
         <Route
           path="/dashboard"
           element={
+            <DashboardProvider>
             <DashboardLayout>
               <motion.div
                 initial="initial"
@@ -73,12 +74,14 @@ function AnimatedRoutes() {
                 <DashboardOverview />
               </motion.div>
             </DashboardLayout>
+            </DashboardProvider>
           }
         />
 
         <Route
           path="/dashboard/leaderboard"
           element={
+            <DashboardProvider>
             <DashboardLayout>
               <motion.div
                 initial="initial"
@@ -90,12 +93,14 @@ function AnimatedRoutes() {
                 <LeaderboardPage />
               </motion.div>
             </DashboardLayout>
+            </DashboardProvider>
           }
         />
 
         <Route
           path="/dashboard/badges"
           element={
+            <DashboardProvider>
             <DashboardLayout>
               <motion.div
                 initial="initial"
@@ -107,12 +112,14 @@ function AnimatedRoutes() {
                 <BadgesPage />
               </motion.div>
             </DashboardLayout>
+            </DashboardProvider>
           }
         />
 
         <Route
           path="/resources"
           element={
+            <DashboardProvider>
             <DashboardLayout>
               <motion.div
                 initial="initial"
@@ -124,6 +131,7 @@ function AnimatedRoutes() {
                 <ResourcesPage />
               </motion.div>
             </DashboardLayout>
+            </DashboardProvider>
           }
         />
 
@@ -131,7 +139,7 @@ function AnimatedRoutes() {
         <Route
           path="/support"
           element={
-            <MainLayout>
+            <MainLayout title="ArcadeCalc - Support" description="Get help and support for ArcadeCalc">
               <motion.div
                 initial="initial"
                 animate="in"
@@ -177,12 +185,11 @@ function AnimatedRoutes() {
 
 function App() {
   return (
-    <AuthProvider>
+    <RootLayout>
       <Router>
         <AnimatedRoutes />
-        <Toaster />
       </Router>
-    </AuthProvider>
+    </RootLayout>
   );
 }
 

@@ -1,6 +1,4 @@
-const API_BASE_URL = window.location.hostname === 'localhost'
-  ? 'http://localhost:5000/api'
-  : '/.netlify/functions';
+const API_BASE_URL = 'http://localhost:3001/api';
 
 export const api = {
   async calculatePoints(profileUrl) {
@@ -26,17 +24,30 @@ export const api = {
   },
 
   async getUser(profileUrl) {
-    const response = await fetch(`${API_BASE_URL}/get-user/${encodeURIComponent(profileUrl)}`);
-    return response.json();
+    // Demo user data
+    return Promise.resolve({
+      id: 'demo-user',
+      profileUrl,
+      name: 'Demo User',
+      email: 'demo@example.com',
+    });
   },
 
   async getLeaderboard() {
-    const response = await fetch(`${API_BASE_URL}/leaderboard`);
-    return response.json();
+    // Demo leaderboard data
+    return Promise.resolve([
+      { userId: 'demo-user', points: 87, rank: 1 },
+      { userId: 'user2', points: 75, rank: 2 },
+      { userId: 'user3', points: 60, rank: 3 },
+    ]);
   },
 
   async getAvailableBadges() {
-    const response = await fetch(`${API_BASE_URL}/available-badges`);
-    return response.json();
+    // Demo available badges
+    return Promise.resolve([
+      { name: 'Skill Badge 1', type: 'skill', points: 0.5, category: 'Skill', completed: true },
+      { name: 'Level Badge 1', type: 'level', points: 1, category: 'Level', completed: true },
+      { name: 'Trivia Badge 1', type: 'trivia', points: 1, category: 'Trivia', completed: true },
+    ]);
   },
 };

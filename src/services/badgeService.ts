@@ -1,13 +1,9 @@
 import { api } from './api';
 
 export interface Badge {
-  _id: string;
   name: string;
-  description: string;
-  points: number;
-  imageUrl: string;
-  createdAt: Date;
-  category: 'achievement' | 'skill' | 'special';
+  type: 'game' | 'trivia' | 'skill' | 'completion' | 'lab-free';
+  earnedDate?: string;
 }
 
 export interface UserBadge {
@@ -21,88 +17,102 @@ export interface UserPoints {
   badges: UserBadge[];
 }
 
+export interface CalculationResponse {
+  points: number;
+  badges: Badge[];
+  breakdown: {
+    gameBadges: number;
+    triviaBadges: number;
+    skillBadges: number;
+    milestonePoints: number;
+  };
+  milestoneProgress?: {
+    currentMilestone: number;
+    progress: number;
+  };
+}
+
 class BadgeService {
-  private readonly API_BASE_URL = 'http://localhost:5001/api';
+  // Calculate points for a profile URL
+  async calculatePoints(profileUrl: string, isFacilitator: boolean = false): Promise<CalculationResponse> {
+    // Demo calculation response
+    return Promise.resolve({
+      points: 87,
+      badges: [
+        { name: 'Skill Badge 1', type: 'skill', earnedDate: '2024-01-01' },
+        { name: 'Level Badge 1', type: 'game', earnedDate: '2024-01-02' },
+        { name: 'Trivia Badge 1', type: 'trivia', earnedDate: '2024-01-03' },
+      ],
+      breakdown: {
+        gameBadges: 1,
+        triviaBadges: 1,
+        skillBadges: 1,
+        milestonePoints: 5,
+      },
+      milestoneProgress: {
+        currentMilestone: 2,
+        progress: 60,
+      },
+    });
+  }
 
-  // Calculate points for a user
+  // Calculate points for a user (compatibility method)
   async calculateUserPoints(userId: string): Promise<number> {
-    try {
-      const response = await fetch(`${this.API_BASE_URL}/users/${userId}/points`);
-      if (!response.ok) {
-        throw new Error('Failed to calculate points');
-      }
-      const data = await response.json();
-      return data.totalPoints;
-    } catch (error) {
-      console.error('Error calculating points:', error);
-      throw error;
-    }
+    // Demo points
+    return Promise.resolve(87);
   }
 
-  // Get all badges for a user with their details
+  // Get all badges for a profile URL
+  async getProfileBadges(profileUrl: string, isFacilitator: boolean = false): Promise<Badge[]> {
+    // Demo badges
+    return Promise.resolve([
+      { name: 'Skill Badge 1', type: 'skill', earnedDate: '2024-01-01' },
+      { name: 'Level Badge 1', type: 'game', earnedDate: '2024-01-02' },
+      { name: 'Trivia Badge 1', type: 'trivia', earnedDate: '2024-01-03' },
+    ]);
+  }
+
+  // Get all badges for a user (compatibility method)
   async getUserBadges(userId: string): Promise<UserBadge[]> {
-    try {
-      const response = await fetch(`${this.API_BASE_URL}/users/${userId}/badges`);
-      if (!response.ok) {
-        throw new Error('Failed to fetch user badges');
-      }
-      return await response.json();
-    } catch (error) {
-      console.error('Error fetching user badges:', error);
-      throw error;
-    }
+    // Demo user badges
+    return Promise.resolve([
+      { badgeId: '1', earnedAt: new Date('2024-01-01'), badge: { name: 'Skill Badge 1', type: 'skill', earnedDate: '2024-01-01' } },
+      { badgeId: '2', earnedAt: new Date('2024-01-02'), badge: { name: 'Level Badge 1', type: 'game', earnedDate: '2024-01-02' } },
+      { badgeId: '3', earnedAt: new Date('2024-01-03'), badge: { name: 'Trivia Badge 1', type: 'trivia', earnedDate: '2024-01-03' } },
+    ]);
   }
 
-  // Get all available badges
+  // Get all available badges (returns demo badges)
   async getAllBadges(): Promise<Badge[]> {
-    try {
-      const response = await fetch(`${this.API_BASE_URL}/badges`);
-      if (!response.ok) {
-        throw new Error('Failed to fetch badges');
-      }
-      return await response.json();
-    } catch (error) {
-      console.error('Error fetching badges:', error);
-      throw error;
-    }
+    return Promise.resolve([
+      { name: 'Skill Badge 1', type: 'skill', earnedDate: '2024-01-01' },
+      { name: 'Level Badge 1', type: 'game', earnedDate: '2024-01-02' },
+      { name: 'Trivia Badge 1', type: 'trivia', earnedDate: '2024-01-03' },
+    ]);
   }
 
-  // Award a badge to a user
+  // Award a badge to a user (not supported in this implementation)
   async awardBadge(userId: string, badgeId: string): Promise<UserBadge> {
-    try {
-      const response = await fetch(`${this.API_BASE_URL}/users/${userId}/badges`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ badgeId }),
-      });
-      if (!response.ok) {
-        throw new Error('Failed to award badge');
-      }
-      return await response.json();
-    } catch (error) {
-      console.error('Error awarding badge:', error);
-      throw error;
-    }
+    throw new Error('Badge awarding not supported in this implementation');
   }
 
   // Get user's complete points summary including badges
   async getUserPointsSummary(userId: string): Promise<UserPoints> {
-    try {
-      const [totalPoints, badges] = await Promise.all([
-        this.calculateUserPoints(userId),
-        this.getUserBadges(userId),
-      ]);
+    // Demo user points summary
+    return Promise.resolve({
+      totalPoints: 87,
+      badges: [
+        { badgeId: '1', earnedAt: new Date('2024-01-01'), badge: { name: 'Skill Badge 1', type: 'skill', earnedDate: '2024-01-01' } },
+        { badgeId: '2', earnedAt: new Date('2024-01-02'), badge: { name: 'Level Badge 1', type: 'game', earnedDate: '2024-01-02' } },
+        { badgeId: '3', earnedAt: new Date('2024-01-03'), badge: { name: 'Trivia Badge 1', type: 'trivia', earnedDate: '2024-01-03' } },
+      ],
+    });
+  }
 
-      return {
-        totalPoints,
-        badges,
-      };
-    } catch (error) {
-      console.error('Error getting user points summary:', error);
-      throw error;
-    }
+  // Get profile points summary (new method)
+  async getProfilePointsSummary(profileUrl: string, isFacilitator: boolean = false): Promise<CalculationResponse> {
+    // Demo calculation response
+    return this.calculatePoints(profileUrl, isFacilitator);
   }
 }
 
